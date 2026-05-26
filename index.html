@@ -680,7 +680,6 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <button id="st-tab-btn-procurement" class="st-tab" data-tab="procurement" onclick="switchSTTab('procurement',this)" style="padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font)">📦 แจ้งจัดซื้อ</button>
       <button id="st-tab-btn-custpo" class="st-tab" data-tab="custpo" onclick="switchSTTab('custpo',this)" style="padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font)">📋 PO ลูกค้า</button>
       <button id="st-tab-btn-tech" class="st-tab" data-tab="tech" onclick="switchSTTab('tech',this)" style="padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font)">🔧 ช่างติดตั้ง</button>
-      <button id="st-tab-btn-print" class="st-tab" data-tab="print" onclick="switchSTTab('print',this)" style="padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font);display:none">🖨 เอกสาร</button>
     </div>
     <div class="modal-body" style="padding:16px 20px;min-height:320px">
       <div id="st-tab-timeline">
@@ -866,11 +865,6 @@ tr:hover td{background:rgba(255,255,255,0.02)}
         </div>
         <div style="font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">PO ที่ได้รับ</div>
         <div id="cpo-list" style="max-height:200px;overflow-y:auto"></div>
-      </div>
-
-      <!-- ════ TAB: เอกสาร / Print ════ -->
-      <div id="st-tab-print" style="display:none">
-        <div id="st-print-content"></div>
       </div>
 
     </div>
@@ -2934,7 +2928,7 @@ let paymentsCache = null; // cache payments ใน memory ลด API calls
 
 
 function switchSTTab(tab, el) {
-  ['timeline','docs','payment','procurement','custpo','tech','print'].forEach(t => {
+  ['timeline','docs','payment','procurement','custpo','tech'].forEach(t => {
     const panel = document.getElementById('st-tab-' + t);
     if (panel) panel.style.display = t === tab ? 'block' : 'none';
   });
@@ -2946,7 +2940,6 @@ function switchSTTab(tab, el) {
   if (tab === 'procurement') initProcurementTab();
   if (tab === 'tech') renderTechJobList();
   if (tab === 'custpo') renderCustPOTab();
-  if (tab === 'print') renderPrintTab();
 }
 
 function formatDateTime(ts) {
@@ -3358,10 +3351,6 @@ function applyTrackerVisibility(q) {
   if (custpoBtn) custpoBtn.style.display = ''; // แสดงเสมอ
   const techBtn = document.getElementById('st-tab-btn-tech');
   if (techBtn) techBtn.style.display = isCancelled ? 'none' : '';
-  // Tab เอกสาร — แสดงเมื่อ PO Received หรือ Closed
-  const printBtn = document.getElementById('st-tab-btn-print');
-  const showPrint = q.Status === 'PO Received' || q.Status === 'Closed' || isStatusClosed;
-  if (printBtn) printBtn.style.display = showPrint ? '' : 'none';
 
   // ปุ่มปิดการขาย — ซ่อนถ้า Cancelled
   const closeBtn = document.getElementById('st-close-deal-btn');
